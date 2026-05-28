@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalAcce — Software para Negocios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050507;
+  --s1:#0A0A0F;
+  --s2:#0F0F16;
+  --s3:#16161F;
+  --border:rgba(255,255,255,0.05);
+  --border2:rgba(255,255,255,0.1);
+  --text:#F0F0F8;
+  --muted:#6B6B82;
+  --dim:#3A3A50;
+  --orange:#E8621A;
+  --orange2:#FF7A32;
+  --gold:#C8A84B;
+  --purple:#8B5CF6;
+  --teal:#14B8A6;
+  --green:#22C55E;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Outfit',system-ui,sans-serif;
+  min-height:100vh;overflow-x:hidden;
+}
+
+/* ── Noise texture overlay ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:999;opacity:.4;
+}
+
+/* ── Background mesh ── */
+.bg-mesh{
+  position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+}
+.bg-mesh::before{
+  content:'';position:absolute;
+  width:900px;height:900px;border-radius:50%;
+  top:-200px;right:-200px;
+  background:radial-gradient(circle,rgba(232,98,26,0.07) 0%,transparent 70%);
+  animation:drift1 20s ease-in-out infinite alternate;
+}
+.bg-mesh::after{
+  content:'';position:absolute;
+  width:700px;height:700px;border-radius:50%;
+  bottom:-100px;left:-150px;
+  background:radial-gradient(circle,rgba(139,92,246,0.06) 0%,transparent 70%);
+  animation:drift2 25s ease-in-out infinite alternate;
+}
+@keyframes drift1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-80px,60px) scale(1.1)}}
+@keyframes drift2{0%{transform:translate(0,0)}100%{transform:translate(60px,-80px)}}
+
+/* ── Grid lines decoration ── */
+.grid-lines{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 48px;
+  background:rgba(5,5,7,0.7);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:12px;text-decoration:none;
+}
+.nav-logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:0 0 20px rgba(232,98,26,0.4);
+}
+.nav-logo-text{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  color:var(--text);letter-spacing:-0.3px;
+}
+.nav-cta{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:10px;
+  background:rgba(232,98,26,0.12);border:1px solid rgba(232,98,26,0.25);
+  color:var(--orange);font-size:13px;font-weight:600;
+  text-decoration:none;transition:all .2s;
+}
+.nav-cta:hover{background:rgba(232,98,26,0.2);border-color:rgba(232,98,26,0.4)}
+
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:20px;
+  background:rgba(232,98,26,0.08);border:1px solid rgba(232,98,26,0.2);
+  font-size:12px;font-weight:600;color:var(--orange);
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:28px;
+  animation:fadeUp .8s ease both;
+}
+.hero-eyebrow::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--orange);
+  box-shadow:0 0 8px var(--orange);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(42px,7vw,88px);
+  font-weight:900;line-height:1.0;
+  letter-spacing:-2px;
+  margin-bottom:24px;
+  animation:fadeUp .8s .1s ease both;
+}
+.hero h1 em{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--orange) 0%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font-size:18px;color:var(--muted);font-weight:400;
+  max-width:520px;line-height:1.7;margin-bottom:48px;
+  animation:fadeUp .8s .2s ease both;
+}
+.hero-stats{
+  display:flex;gap:48px;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp .8s .3s ease both;
+}
+.stat{text-align:center}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:36px;font-weight:900;
+  background:linear-gradient(135deg,#fff,var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{font-size:12px;color:var(--muted);font-weight:500;margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.stat-div{width:1px;background:var(--border2);align-self:stretch}
+
+/* ── SECTION ── */
+section{position:relative;z-index:10;padding:100px 48px}
+.container{max-width:1200px;margin:0 auto}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--orange);margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--orange)}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,48px);font-weight:900;
+  letter-spacing:-1px;line-height:1.1;
+  margin-bottom:12px;
+}
+.section-sub{font-size:16px;color:var(--muted);max-width:480px;line-height:1.7}
+
+/* ── PRODUCTS GRID ── */
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:2px;margin-top:64px;
+  border:1px solid var(--border);
+  border-radius:24px;overflow:hidden;
+}
+.product-card{
+  background:var(--s1);padding:40px;
+  position:relative;overflow:hidden;
+  transition:background .3s;
+  cursor:default;
+}
+.product-card::before{
+  content:'';position:absolute;inset:0;
+  opacity:0;transition:opacity .4s;
+}
+.product-card:hover{background:var(--s2)}
+.product-card:hover::before{opacity:1}
+.product-card.c-orange::before{background:radial-gradient(ellipse 60% 60% at 90% 10%,rgba(232,98,26,0.08),transparent)}
+.product-card.c-purple::before{background:radial-gradient(ellipse 60% 60% at 90% 10%,rgba(139,92,246,0.08),transparent)}
+.product-card.c-gold::before  {background:radial-gradient(ellipse 60% 60% at 90% 10%,rgba(200,168,75,0.08),transparent)}
+.product-card.c-teal::before  {background:radial-gradient(ellipse 60% 60% at 90% 10%,rgba(20,184,166,0.08),transparent)}
+
+/* Dividers */
+.product-card:nth-child(1),.product-card:nth-child(2){border-bottom:1px solid var(--border)}
+.product-card:nth-child(1),.product-card:nth-child(3){border-right:1px solid var(--border)}
+
+.pc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.pc-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  position:relative;
+}
+.c-orange .pc-icon{background:rgba(232,98,26,0.1);box-shadow:0 8px 24px rgba(232,98,26,0.15)}
+.c-purple .pc-icon{background:rgba(139,92,246,0.1);box-shadow:0 8px 24px rgba(139,92,246,0.15)}
+.c-gold   .pc-icon{background:rgba(200,168,75,0.1);box-shadow:0 8px 24px rgba(200,168,75,0.15)}
+.c-teal   .pc-icon{background:rgba(20,184,166,0.1);box-shadow:0 8px 24px rgba(20,184,166,0.15)}
+
+.pc-badge{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 12px;border-radius:20px;
+}
+.c-orange .pc-badge{background:rgba(232,98,26,0.1);color:var(--orange);border:1px solid rgba(232,98,26,0.2)}
+.c-purple .pc-badge{background:rgba(139,92,246,0.1);color:var(--purple);border:1px solid rgba(139,92,246,0.2)}
+.c-gold   .pc-badge{background:rgba(200,168,75,0.1);color:var(--gold);border:1px solid rgba(200,168,75,0.2)}
+.c-teal   .pc-badge{background:rgba(20,184,166,0.1);color:var(--teal);border:1px solid rgba(20,184,166,0.2)}
+
+.pc-name{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-weight:900;margin-bottom:10px;letter-spacing:-0.5px;
+}
+.pc-desc{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:28px}
+.pc-features{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:32px;
+}
+.pc-feat{
+  font-size:11px;font-weight:500;padding:4px 10px;border-radius:6px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--dim);
+  transition:all .2s;
+}
+.product-card:hover .pc-feat{border-color:var(--border2);color:var(--muted)}
+
+.pc-actions{display:flex;flex-direction:column;gap:10px}
+.dl-primary{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-radius:14px;
+  text-decoration:none;transition:all .25s;
+  font-weight:600;font-size:14px;font-family:'Outfit',sans-serif;
+  position:relative;overflow:hidden;
+}
+.dl-primary::after{
+  content:'→';position:absolute;right:-20px;
+  transition:right .2s ease;font-size:16px;
+}
+.dl-primary:hover::after{right:18px}
+.dl-primary:hover{padding-right:36px}
+
+.c-orange .dl-primary.apk{background:rgba(232,98,26,0.12);border:1px solid rgba(232,98,26,0.25);color:var(--orange)}
+.c-orange .dl-primary.apk:hover{background:rgba(232,98,26,0.2);border-color:var(--orange);box-shadow:0 8px 32px rgba(232,98,26,0.2)}
+.c-orange .dl-primary.exe{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text)}
+.c-orange .dl-primary.exe:hover{background:rgba(255,255,255,0.07);border-color:var(--border2)}
+
+.c-purple .dl-primary.apk{background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);color:var(--purple)}
+.c-purple .dl-primary.apk:hover{background:rgba(139,92,246,0.2);border-color:var(--purple);box-shadow:0 8px 32px rgba(139,92,246,0.2)}
+.c-purple .dl-primary.exe{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text)}
+
+.c-gold .dl-primary.apk{background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.25);color:var(--gold)}
+.c-gold .dl-primary.apk:hover{background:rgba(200,168,75,0.2);border-color:var(--gold);box-shadow:0 8px 32px rgba(200,168,75,0.2)}
+.c-gold .dl-primary.exe{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text)}
+
+.c-teal .dl-primary.apk{background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.25);color:var(--teal)}
+.c-teal .dl-primary.apk:hover{background:rgba(20,184,166,0.2);border-color:var(--teal);box-shadow:0 8px 32px rgba(20,184,166,0.2)}
+.c-teal .dl-primary.exe{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text)}
+
+.dl-web{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--muted);text-decoration:none;
+  padding:6px 0;transition:color .2s;font-weight:500;
+}
+.dl-web:hover{color:var(--text)}
+.dl-web::before{content:'↗';font-size:11px}
+.coming{
+  font-size:12px;color:var(--dim);padding:8px 0;
+  display:flex;align-items:center;gap:6px;
+}
+.coming::before{content:'·'}
+.dl-icon{font-size:18px;margin-right:2px}
+
+/* ── HOW TO ── */
+.how-section{background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.how-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);border-radius:16px;overflow:hidden;margin-top:60px;
+}
+.how-step{
+  background:var(--s1);padding:36px 28px;
+  position:relative;transition:background .3s;
+}
+.how-step:hover{background:var(--s2)}
+.how-num{
+  font-family:'Playfair Display',serif;
+  font-size:64px;font-weight:900;
+  color:rgba(255,255,255,0.04);
+  line-height:1;margin-bottom:16px;
+  transition:color .3s;
+}
+.how-step:hover .how-num{color:rgba(232,98,26,0.1)}
+.how-icon{font-size:28px;margin-bottom:14px;display:block}
+.how-title{font-size:15px;font-weight:700;margin-bottom:8px}
+.how-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── CTA SECTION ── */
+.cta-section{
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%,rgba(232,98,26,0.06),transparent 70%);
+  pointer-events:none;
+}
+.cta-card{
+  position:relative;
+  background:var(--s1);
+  border:1px solid var(--border2);
+  border-radius:32px;padding:80px 48px;
+  overflow:hidden;
+}
+.cta-card::before{
+  content:'';position:absolute;
+  top:-1px;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.cta-card::after{
+  content:'';position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(232,98,26,0.12),transparent 70%);
+  pointer-events:none;
+}
+.cta-label{
+  display:inline-block;padding:6px 16px;border-radius:20px;
+  background:rgba(232,98,26,0.08);border:1px solid rgba(232,98,26,0.2);
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--orange);margin-bottom:24px;
+}
+.cta-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,52px);font-weight:900;
+  letter-spacing:-1px;margin-bottom:16px;
+}
+.cta-sub{font-size:16px;color:var(--muted);max-width:400px;margin:0 auto 40px;line-height:1.6}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:18px 36px;border-radius:16px;
+  background:var(--orange);color:#fff;
+  font-family:'Outfit',sans-serif;
+  font-size:16px;font-weight:700;text-decoration:none;
+  box-shadow:0 16px 48px rgba(232,98,26,0.35);
+  transition:all .25s cubic-bezier(.34,1.2,.64,1);
+  position:relative;z-index:1;
+}
+.cta-btn:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 24px 64px rgba(232,98,26,0.5);
+}
+.cta-btn:active{transform:translateY(1px) scale(0.99)}
+.cta-note{margin-top:20px;font-size:12px;color:var(--dim)}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:10;
+  padding:40px 48px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+  background:linear-gradient(135deg,#fff 0%,var(--orange) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.footer-copy{font-size:13px;color:var(--muted)}
+.footer-links{display:flex;gap:24px}
+.footer-link{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--text)}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  nav{padding:16px 24px}
+  section{padding:80px 24px}
+  .products-grid{grid-template-columns:1fr}
+  .product-card:nth-child(1),.product-card:nth-child(3){border-right:none}
+  .product-card:nth-child(1),.product-card:nth-child(2){border-bottom:1px solid var(--border)}
+  .product-card:nth-child(3){border-bottom:1px solid var(--border)}
+  .how-grid{grid-template-columns:1fr 1fr}
+  footer{flex-direction:column;text-align:center;padding:32px 24px}
+  .footer-links{justify-content:center}
+  .cta-card{padding:48px 24px}
+}
+@media(max-width:480px){
+  .how-grid{grid-template-columns:1fr}
+  .hero-stats{gap:24px}
+  .stat-div{display:none}
+}
+
+/* ── Scroll animations ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s cubic-bezier(.34,1.2,.64,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="grid-lines"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">⚡</div>
+    <div class="nav-logo-text">GlobalAcce</div>
+  </a>
+  <a href="https://wa.me/573214016292" target="_blank" class="nav-cta">
+    💬 Solicitar licencia
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Software para negocios colombianos</div>
+  <h1>Software que<br><em>transforma</em><br>tu negocio</h1>
+  <p class="hero-sub">Aplicaciones profesionales para talleres, fincas e iglesias. Con respaldo en la nube y disponible en Android y Windows.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Softwares</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">En la nube</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Disponible</div>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Dispositivos</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section>
+<div class="container">
+  <div class="section-label reveal">Descargas disponibles</div>
+  <div class="section-title reveal">Elige tu software</div>
+  <p class="section-sub reveal">Descarga el instalador para tu dispositivo. Necesitas un código de licencia para activar.</p>
+
+  <div class="products-grid reveal">
+
+    <!-- ACCE PRO -->
+    <div class="product-card c-orange">
+      <div class="pc-top">
+        <div class="pc-icon">📱</div>
+        <span class="pc-badge">Taller Celulares</span>
+      </div>
+      <div class="pc-name">ACCE PRO</div>
+      <div class="pc-desc">Gestión completa para talleres de reparación. Control de reparaciones, inventario sincronizado, catálogo online y reportes en tiempo real.</div>
+      <div class="pc-features">
+        <span class="pc-feat">Reparaciones</span>
+        <span class="pc-feat">Inventario</span>
+        <span class="pc-feat">Catálogo online</span>
+        <span class="pc-feat">Ventas</span>
+        <span class="pc-feat">Caja</span>
+        <span class="pc-feat">Reportes</span>
+      </div>
+      <div class="pc-actions">
+        <a href="https://drive.google.com/uc?export=download&id=1cP0DA884bIyDIeeSR34NVvubiD4e_6jq&confirm=t" class="dl-primary apk">
+          <span><span class="dl-icon">📲</span> APK para Android</span>
+          <span style="font-size:11px;opacity:.6;font-weight:400">Descargar .apk</span>
+        </a>
+        <a href="https://drive.google.com/uc?export=download&id=17LjiN3IynT0o1VKKFDf6UxGzTyMGoxhi&confirm=t" class="dl-primary exe">
+          <span><span class="dl-icon">💻</span> Instalador Windows</span>
+          <span style="font-size:11px;opacity:.6;font-weight:400">Descargar .exe</span>
+        </a>
+        <a href="https://edier27.github.io/Acce7/" target="_blank" class="dl-web">Ver versión web</a>
+      </div>
+    </div>
+
+    <!-- FERNEYMOTOS -->
+    <div class="product-card c-purple">
+      <div class="pc-top">
+        <div class="pc-icon">🏍️</div>
+        <span class="pc-badge">Taller Motos</span>
+      </div>
+      <div class="pc-name">FerneyMotos</div>
+      <div class="pc-desc">Sistema integral para talleres de motos. Gestiona servicios, repuestos, empleados y el flujo de caja de tu taller con facilidad.</div>
+      <div class="pc-features">
+        <span class="pc-feat">Servicios</span>
+        <span class="pc-feat">Repuestos</span>
+        <span class="pc-feat">Empleados</span>
+        <span class="pc-feat">Caja</span>
+        <span class="pc-feat">Reportes</span>
+      </div>
+      <div class="pc-actions">
+        <a href="LINK_APK_FERNEYMOTOS" class="dl-primary apk">
+          <span><span class="dl-icon">📲</span> APK para Android</span>
+          <span style="font-size:11px;opacity:.6;font-weight:400">Descargar .apk</span>
+        </a>
+        <span class="coming">Windows — Próximamente</span>
+        <a href="https://edier27.github.io/MotoTaller/" target="_blank" class="dl-web">Ver versión web</a>
+      </div>
+    </div>
+
+    <!-- COSECHAPRO -->
+    <div class="product-card c-gold">
+      <div class="pc-top">
+        <div class="pc-icon">☕</div>
+        <span class="pc-badge">Finca Cafetera</span>
+      </div>
+      <div class="pc-name">CosechaPRO</div>
+      <div class="pc-desc">Administra tu finca cafetera de forma profesional. Registro de cosechas por turno, recolectores, pagos, gastos y planilla de empleados.</div>
+      <div class="pc-features">
+        <span class="pc-feat">Cosechas</span>
+        <span class="pc-feat">Recolectores</span>
+        <span class="pc-feat">Pagos</span>
+        <span class="pc-feat">Gastos</span>
+        <span class="pc-feat">Planilla</span>
+        <span class="pc-feat">Fiado</span>
+      </div>
+      <div class="pc-actions">
+        <a href="LINK_APK_COSECHAPRO" class="dl-primary apk">
+          <span><span class="dl-icon">📲</span> APK para Android</span>
+          <span style="font-size:11px;opacity:.6;font-weight:400">Descargar .apk</span>
+        </a>
+        <span class="coming">Windows — Próximamente</span>
+        <a href="https://edier27.github.io/CosechaPRO/" target="_blank" class="dl-web">Ver versión web</a>
+      </div>
+    </div>
+
+    <!-- EBEN-EZER -->
+    <div class="product-card c-teal">
+      <div class="pc-top">
+        <div class="pc-icon">⛪</div>
+        <span class="pc-badge">Iglesia</span>
+      </div>
+      <div class="pc-name">Eben-ezer</div>
+      <div class="pc-desc">Software diseñado para la gestión de iglesias. Control de miembros, registro de diezmos, ofrendas y administración de actividades.</div>
+      <div class="pc-features">
+        <span class="pc-feat">Miembros</span>
+        <span class="pc-feat">Diezmos</span>
+        <span class="pc-feat">Ofrendas</span>
+        <span class="pc-feat">Actividades</span>
+        <span class="pc-feat">Reportes</span>
+      </div>
+      <div class="pc-actions">
+        <a href="LINK_APK_EBENEZER" class="dl-primary apk">
+          <span><span class="dl-icon">📲</span> APK para Android</span>
+          <span style="font-size:11px;opacity:.6;font-weight:400">Descargar .apk</span>
+        </a>
+        <span class="coming">Windows — Próximamente</span>
+        <a href="https://edier27.github.io/EbenEzer/" target="_blank" class="dl-web">Ver versión web</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- HOW TO -->
+<section class="how-section">
+<div class="container">
+  <div class="section-label reveal">Proceso simple</div>
+  <div class="section-title reveal">En 4 pasos</div>
+  <div class="how-grid reveal">
+    <div class="how-step">
+      <div class="how-num">01</div>
+      <span class="how-icon">🔑</span>
+      <div class="how-title">Solicita tu licencia</div>
+      <div class="how-desc">Escríbenos por WhatsApp y te enviamos un código de activación único en minutos.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">02</div>
+      <span class="how-icon">⬇️</span>
+      <div class="how-title">Descarga e instala</div>
+      <div class="how-desc">Elige APK para Android o .exe para Windows. Instalación en menos de 2 minutos.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">03</div>
+      <span class="how-icon">✅</span>
+      <div class="how-title">Activa tu cuenta</div>
+      <div class="how-desc">Crea tu usuario con el código de licencia. Tu espacio en la nube queda listo.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">04</div>
+      <span class="how-icon">🚀</span>
+      <div class="how-title">Empieza a usar</div>
+      <div class="how-desc">Todo lo que registres se guarda local y en la nube automáticamente. Sin límites.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+<div class="container">
+  <div class="cta-card reveal">
+    <div class="cta-label">¿Listo para empezar?</div>
+    <div class="cta-title">Solicita tu licencia<br>hoy mismo</div>
+    <p class="cta-sub">Nuestros planes son accesibles para cualquier negocio. Escríbenos y te asesoramos sin compromiso.</p>
+    <a href="https://wa.me/573214016292" target="_blank" class="cta-btn">
+      💬 Escribir por WhatsApp
+    </a>
+    <div class="cta-note">Respuesta inmediata · Soporte incluido · Sin contratos</div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GlobalAcce</div>
+  <div class="footer-copy">© 2026 GlobalAcce · Todos los derechos reservados</div>
+  <div class="footer-links">
+    <a href="https://wa.me/573214016292" target="_blank" class="footer-link">WhatsApp</a>
+    <a href="https://edier27.github.io/Acce7/" target="_blank" class="footer-link">ACCE PRO Web</a>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+</script>
+</body>
+</html>
