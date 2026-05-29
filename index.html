@@ -348,6 +348,29 @@ footer{
   .values-grid{grid-template-columns:1fr}
 }
 
+
+/* ── CATALOG ── */
+.catalog-section{background:var(--light);border-top:1px solid var(--border)}
+.catalog-frame-wrap{
+  background:#fff;border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.06);
+  max-width:1000px;margin:0 auto;
+}
+.catalog-frame{
+  width:100%;
+  height:700px;
+  border:none;
+  display:block;
+  background:#fff;
+}
+@media(max-width:900px){
+  .catalog-frame{height:600px}
+}
+@media(max-width:480px){
+  .catalog-frame{height:520px}
+}
+
 </style>
 </head>
 <body>
@@ -360,6 +383,7 @@ footer{
   </a>
   <div class="nav-right">
     <a href="#software" class="nav-link">Software</a>
+    <a href="#catalogo" class="nav-link">Productos</a>
     <a href="#quienes-somos" class="nav-link">Quiénes somos</a>
     <a href="#como-instalar" class="nav-link">Cómo instalar</a>
     <a href="https://wa.me/573214016292" target="_blank" class="nav-btn">💬 Solicitar licencia</a>
@@ -514,6 +538,31 @@ footer{
       <div class="step-title">Empieza a usar</div>
       <div class="step-desc">Todo se guarda en tu dispositivo y en la nube automáticamente.</div>
     </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- CATALOGO -->
+<div class="catalog-section" id="catalogo">
+<div class="section">
+  <div class="section-header" style="text-align:center;max-width:680px;margin:0 auto 32px">
+    <div class="section-tag" style="justify-content:center">Tienda online</div>
+    <div class="section-title">Nuestros productos</div>
+    <p class="section-sub" style="margin:0 auto">Explora nuestro catálogo de repuestos y accesorios disponibles.</p>
+  </div>
+  <div class="catalog-frame-wrap">
+    <iframe
+      class="catalog-frame"
+      src="https://edier27.github.io/Acce7/?client=PRO_FWB732_00555HR8#catalog"
+      title="Catálogo de productos"
+      loading="lazy"
+      frameborder="0">
+    </iframe>
+  </div>
+  <div style="text-align:center;margin-top:20px">
+    <a href="https://edier27.github.io/Acce7/?client=PRO_FWB732_00555HR8#catalog" target="_blank" class="dl-web" style="display:inline-flex">↗ Abrir catálogo en pantalla completa</a>
   </div>
 </div>
 </div>
