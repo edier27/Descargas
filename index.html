@@ -304,6 +304,50 @@ footer{
   .hero-actions{flex-direction:column}
   .hero-actions a{justify-content:center}
 }
+
+/* ── ABOUT ── */
+.about-section{background:#fff}
+.about-intro{max-width:760px;margin:0 auto 56px;text-align:center}
+.about-intro p{font-size:17px;color:#374151;line-height:1.8;margin-bottom:18px}
+.about-intro p:last-child{margin-bottom:0}
+.mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:64px}
+.mv-card{
+  background:var(--light);border:1px solid var(--border);
+  border-radius:20px;padding:36px;transition:all .2s;
+}
+.mv-card:hover{border-color:var(--orange);box-shadow:0 12px 32px rgba(232,98,26,0.08);transform:translateY(-2px)}
+.mv-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--orange-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin-bottom:20px;
+}
+.mv-title{font-size:24px;font-weight:800;color:var(--black);margin-bottom:14px;letter-spacing:-0.5px}
+.mv-card p{font-size:15px;color:var(--gray);line-height:1.75}
+.values-title{
+  font-size:22px;font-weight:800;color:var(--black);
+  text-align:center;margin-bottom:36px;letter-spacing:-0.5px;
+}
+.values-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.value-item{text-align:center;padding:24px 16px;border-radius:16px;transition:background .2s}
+.value-item:hover{background:var(--light)}
+.value-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--orange-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin:0 auto 14px;
+}
+.value-name{font-size:16px;font-weight:700;color:var(--black);margin-bottom:8px}
+.value-desc{font-size:13px;color:var(--gray);line-height:1.55}
+@media(max-width:900px){
+  .mv-grid{grid-template-columns:1fr}
+  .values-grid{grid-template-columns:1fr 1fr}
+  .about-intro p{font-size:15px}
+}
+@media(max-width:480px){
+  .values-grid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -316,6 +360,7 @@ footer{
   </a>
   <div class="nav-right">
     <a href="#software" class="nav-link">Software</a>
+    <a href="#quienes-somos" class="nav-link">Quiénes somos</a>
     <a href="#como-instalar" class="nav-link">Cómo instalar</a>
     <a href="https://wa.me/573214016292" target="_blank" class="nav-btn">💬 Solicitar licencia</a>
   </div>
@@ -468,6 +513,64 @@ footer{
       <div class="step-icon">🚀</div>
       <div class="step-title">Empieza a usar</div>
       <div class="step-desc">Todo se guarda en tu dispositivo y en la nube automáticamente.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- QUIENES SOMOS -->
+<div class="about-section" id="quienes-somos">
+<div class="section">
+  <div class="section-header" style="text-align:center;max-width:680px;margin:0 auto 48px">
+    <div class="section-tag" style="justify-content:center">Conócenos</div>
+    <div class="section-title">Quiénes somos</div>
+  </div>
+
+  <div class="about-intro">
+    <p>GlobalAcce es una empresa colombiana dedicada a ofrecer soluciones integrales en tecnología móvil. Nacimos con el propósito de brindar servicios confiables de reparación de celulares, venta de accesorios de calidad y desarrollo de software especializado para negocios.</p>
+    <p>Combinamos la experiencia técnica en reparación de equipos con la innovación tecnológica, creando herramientas digitales que ayudan a talleres, comercios y emprendedores a gestionar y hacer crecer sus negocios de manera eficiente.</p>
+    <p>Más que reparar equipos o vender productos, buscamos construir relaciones de confianza a largo plazo, convirtiéndonos en el aliado tecnológico de quienes nos eligen.</p>
+  </div>
+
+  <div class="mv-grid">
+    <div class="mv-card">
+      <div class="mv-icon">🎯</div>
+      <div class="mv-title">Misión</div>
+      <p>Brindar soluciones integrales en tecnología móvil a través de servicios de reparación de celulares con altos estándares de calidad, venta de accesorios confiables y desarrollo de software especializado que impulse la productividad de los negocios. Nos comprometemos a ofrecer atención cercana, soluciones rápidas y precios justos.</p>
+    </div>
+    <div class="mv-card">
+      <div class="mv-icon">🚀</div>
+      <div class="mv-title">Visión</div>
+      <p>Para el año 2030, ser una empresa líder y reconocida a nivel regional en el sector de la tecnología móvil, destacándonos por la excelencia en reparación de equipos, la innovación en nuestros productos de software y la calidad de nuestros accesorios, consolidándonos como aliado estratégico para el crecimiento de comercios y emprendedores.</p>
+    </div>
+  </div>
+
+  <div class="values-title">Nuestros valores</div>
+  <div class="values-grid">
+    <div class="value-item">
+      <div class="value-icon">⭐</div>
+      <div class="value-name">Calidad</div>
+      <div class="value-desc">Cada reparación y producto cumple con los más altos estándares.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">🤝</div>
+      <div class="value-name">Confianza</div>
+      <div class="value-desc">Transparencia y honestidad en cada servicio que ofrecemos.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">💡</div>
+      <div class="value-name">Innovación</div>
+      <div class="value-desc">Desarrollamos soluciones tecnológicas que evolucionan con el mercado.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">❤️</div>
+      <div class="value-name">Compromiso</div>
+      <div class="value-desc">La satisfacción del cliente es nuestra prioridad.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">📍</div>
+      <div class="value-name">Cercanía</div>
+      <div class="value-desc">Atención personalizada y soporte permanente.</div>
     </div>
   </div>
 </div>
